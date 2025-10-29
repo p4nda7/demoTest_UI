@@ -57,12 +57,40 @@ cypress/
 
 ## 🚀 Verwendung
 
-### Cypress Test Runner öffnen (Interaktiver Modus)
+1. Projekt clonen
 
-Öffnen Sie die Cypress Test Runner UI, um Tests interaktiv auszuführen:
+```bash
+git clone git@github.com:p4nda7/demoTest_UI.git
+```
+
+2. Navigieren ins Verzeichnis im Terminal
+
+```bash
+cd demoTest_UI
+```
+
+3. Öffnen Sie die Cypress Test Runner UI, um Tests interaktiv auszuführen:
 
 ```bash
 npx cypress open
+```
+
+4. Testing type auswählen
+
+```bash
+E2E Testing
+```
+
+5. Browser auswählen
+
+```bash
+Chrome / Electron / Firefox
+```
+
+6. Browsertest starten
+
+```bash
+Button: Start E2E Testing
 ```
 
 Dies öffnet die Cypress Test Runner-Anwendung, in der Sie Tests auswählen und ausführen können.
