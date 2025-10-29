@@ -14,7 +14,7 @@ Dieses Projekt enthält End-to-End (E2E) Tests für die OPTIMAL SYSTEMS Website 
 ## 🔧 Voraussetzungen
 
 - Node.js (Version 14 oder höher empfohlen)
-- npm oder yarn
+- npm o
 - Cypress wird als Entwicklungsumgebung installiert
 
 ## 📦 Installation
@@ -27,6 +27,7 @@ Dieses Projekt enthält End-to-End (E2E) Tests für die OPTIMAL SYSTEMS Website 
 2. **Abhängigkeiten installieren:**
    ```bash
    npm install
+   npm install cypress --save-dev
    ```
 
    Dies installiert Cypress und alle erforderlichen Abhängigkeiten.
@@ -61,24 +62,10 @@ cypress/
 Öffnen Sie die Cypress Test Runner UI, um Tests interaktiv auszuführen:
 
 ```bash
-npm run cypress:open
+npx cypress open
 ```
 
 Dies öffnet die Cypress Test Runner-Anwendung, in der Sie Tests auswählen und ausführen können.
-
-### Tests im Headless-Modus ausführen
-
-Führen Sie alle Tests im Headless-Modus aus (ohne Browser-UI):
-
-```bash
-npm test
-```
-
-oder
-
-```bash
-npm run cypress:run
-```
 
 ### Tests in spezifischen Browsern ausführen
 
@@ -199,12 +186,3 @@ module.exports = defineConfig({
 - [Cypress Dokumentation](https://docs.cypress.io/)
 - [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
 - [Cypress API Referenz](https://docs.cypress.io/api/api/table-of-contents)
-
-## 📄 Lizenz
-
-ISC
-
-## 👤 Autor
-
-Dieses Projekt wurde für die automatisierten Tests der OPTIMAL SYSTEMS Website erstellt.
-
