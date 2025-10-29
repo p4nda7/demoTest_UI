@@ -1,0 +1,196 @@
+# ===========================================
+# 🚀 GITLAB CI/CD PIPELINE FÜR CYPRESS TESTS 🚀
+# ===========================================
+# Diese Pipeline führt automatisch Cypress-Tests aus
+# bei jedem Push und Merge Request
+
+# ===========================================
+# 📋 STAGES DEFINITION
+# ===========================================
+stages:
+  - install    # 📦 Dependencies installieren
+  - test       # 🧪 Cypress Tests ausführen
+  - report     # 📊 Test-Reports generieren
+
+# ===========================================
+# ⚙️ GLOBALE VARIABLEN
+# ===========================================
+variables:
+  # 🟢 Node.js Version
+  NODE_VERSION: "18"
+  
+  # 🔧 Cypress-spezifische Variablen
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+  
+  # 📁 Test-Artifacts
+  CYPRESS_SCREENSHOTS_FOLDER: "cypress/screenshots"
+  CYPRESS_VIDEOS_FOLDER: "cypress/videos"
+  CYPRESS_DOWNLOADS_FOLDER: "cypress/downloads"
+
+# ===========================================
+# 💾 CACHE KONFIGURATION
+# ===========================================
+cache:
+  key: 
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+    - cache/Cypress/
+
+# ===========================================
+# 📦 STAGE 1: DEPENDENCIES INSTALLIEREN
+# ===========================================
+install_dependencies:
+  stage: install
+  image: node:${NODE_VERSION}-alpine
+  
+  script:
+    # 🟢 Node.js Version anzeigen
+    - echo "🟢 Node.js Version: $(node --version)"
+    - echo "📦 NPM Version: $(npm --version)"
+    
+    # 📦 Dependencies installieren
+    - echo "📦 Installiere Dependencies..."
+    - npm ci --cache .npm --prefer-offline
+    
+    # 🔧 Cypress installieren und cachen
+    - echo "🔧 Installiere Cypress..."
+    - npx cypress install --cache-from $CYPRESS_CACHE_FOLDER
+    
+    # ✅ Installation verifizieren
+    - echo "✅ Verifiziere Cypress Installation..."
+    - npx cypress verify
+    
+  artifacts:
+    paths:
+      - node_modules/
+      - cache/
+    expire_in: 1 hour
+
+# ===========================================
+# 🧪 STAGE 2: CYPRESS TESTS AUSFÜHREN
+# ===========================================
+cypress_tests:
+  stage: test
+  image: cypress/browsers:node-18.16.0-chrome-114.0.5735.133-ff-114.0.2-edge-114.0.1823.51-1.40.0
+  
+  # 🔗 Abhängigkeit von install_dependencies
+  needs: ["install_dependencies"]
+  
+  # 🌿 Nur bei bestimmten Branches ausführen
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+  
+  before_script:
+    # 🌐 Browser-Informationen anzeigen
+    - echo "🌐 Browser-Informationen:"
+    - google-chrome --version || true
+    - firefox --version || true
+    
+    # ⚙️ Cypress-Konfiguration anzeigen
+    - echo "⚙️ Cypress-Konfiguration:"
+    - npx cypress info || true
+  
+  script:
+    # 🚀 Test-Ausführung starten
+    - echo "🚀 Starte Cypress Tests..."
+    - echo "📄 Test-Dateien:"
+    - find cypress/e2e -name "*.cy.js" -type f
+    
+    # 🧪 Cypress Tests im Headless-Modus ausführen
+    - echo "🧪 Führe Cypress Tests aus..."
+    - npx cypress run
+      --browser chrome
+      --headless
+      --reporter junit
+      --reporter-options "mochaFile=cypress/results/results-[hash].xml"
+      --config screenshotOnRunFailure=true
+    
+    # 📊 Test-Ergebnisse anzeigen
+    - echo "📊 Test-Ergebnisse:"
+    - ls -la cypress/results/ || echo "❌ Keine JUnit-Ergebnisse gefunden"
+    - ls -la cypress/screenshots/ || echo "❌ Keine Screenshots gefunden"
+  
+  # 📦 Artifacts sammeln
+  artifacts:
+    when: always  # Auch bei Fehlern sammeln
+    paths:
+      - cypress/screenshots/
+      - cypress/downloads/
+      - cypress/results/
+    reports:
+      junit: cypress/results/results-*.xml
+    expire_in: 1 week
+
+# ===========================================
+# 📊 STAGE 3: TEST-REPORTS GENERIEREN
+# ===========================================
+generate_reports:
+  stage: report
+  image: node:${NODE_VERSION}-alpine
+  
+  # 🔗 Nur ausführen wenn Tests erfolgreich waren
+  needs: 
+    - job: cypress_tests
+      artifacts: true
+  
+  script:
+    # 📋 Test-Report zusammenfassen
+    - echo "📋 Generiere Test-Report..."
+    - echo "==========================================="
+    - echo "🧪 CYPRESS TEST SUMMARY 🧪"
+    - echo "==========================================="
+    
+    # 📸 Screenshots zählen
+    - echo "📸 Screenshots:"
+    - find cypress/screenshots -name "*.png" | wc -l || echo "0"
+    
+    # 📊 JUnit-Ergebnisse anzeigen (falls vorhanden)
+    - echo "📊 JUnit-Ergebnisse:"
+    - find cypress/results -name "*.xml" -exec echo "✅ Gefunden: {}" \; || echo "❌ Keine JUnit-Ergebnisse"
+    
+    # 📁 Test-Artifacts auflisten
+    - echo "📁 Verfügbare Artifacts:"
+    - ls -la cypress/ || echo "❌ Keine Artifacts gefunden"
+  
+  artifacts:
+    when: always
+    paths:
+      - cypress/
+    expire_in: 1 week
+
+# ===========================================
+# 🔧 OPTIONAL: MANUELLE TEST-AUSFÜHRUNG
+# ===========================================
+manual_cypress_tests:
+  stage: test
+  image: cypress/browsers:node-18.16.0-chrome-114.0.5735.133-ff-114.0.2-edge-114.0.1823.51-1.40.0
+  
+  # 👆 Nur manuell ausführbar
+  when: manual
+  allow_failure: true
+  
+  script:
+    - echo "🔧 Manuelle Test-Ausführung..."
+    - echo "🌐 Verfügbare Browser:"
+    - google-chrome --version || true
+    - firefox --version || true
+    
+    # 🖥️ Interaktiver Modus (für Debugging)
+    - echo "🖥️ Starte Cypress im interaktiven Modus..."
+    - npx cypress open --browser chrome
+
+
+# ===========================================
+# 🎯 PIPELINE ZUSAMMENFASSUNG
+# ===========================================
+# Diese Pipeline bietet:
+# 📦 Automatische Dependency-Installation
+# 🧪 Cypress-Tests in Chrome Browser
+# 📊 Detaillierte Test-Reports
+# 📸 Screenshots bei Fehlern
+# 🔧 Manuelle Test-Ausführung für Debugging
+# ===========================================
