@@ -111,10 +111,11 @@ describe('OPTIMAL SYSTEMS Formular Test', () => {
     cy.get('#nf-field-41-1').check({ force: true })
     
     // Weitere Formularfelder ausfüllen
-    cy.get('#nf-field-42').scrollIntoView().type('testVorname')
-    cy.get('#nf-field-43').scrollIntoView().type('testNachname')
-    cy.get('#nf-field-44').scrollIntoView().type('testEmail@gmail.com')
-    cy.get('#nf-field-45').scrollIntoView().type('Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et')
+    cy.get('#nf-field-42').scrollIntoView().type('Thang')
+    cy.get('#nf-field-43').scrollIntoView().type('Lam (0155 10611547)')
+    cy.get('#nf-field-44').scrollIntoView().type('x0568162@gmail.com ')
+    cy.get('#nf-field-45').scrollIntoView().type('Sehr geehrter Herr Thor,{enter}auf die Stelle ID: R&D-STFE-2509-OSJC bewerbe ich mich bei Ihnen als Softwaretester im Frontend. Als SW Tester bringe ich praktische Erfahrung mit Tools wie Cypress, Playwright und Selenium mit und teste täglich Webanwendungen auf Performance, Funktionalität und Nutzerfreundlichkeit. Der Mix aus Technik, Design und Qualität reizt mich besonders, da ich gern Schnittstellen zwischen Entwicklung und Testing verbinde. Nun möchte ich meine Leidenschaft für präzises, modernes Frontend-Testing in Ihr Team einbringen und gemeinsam Produkte entwickeln, die nicht nur funktionieren, sondern begeistern.{enter}Viele Grüße{enter}Thang Lam')
+
     
     // Überprüfen, dass alle Felder korrekt ausgefüllt wurden
     //cy.get('#nf-field-41-1').should('be.checked')
