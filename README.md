@@ -4,10 +4,9 @@ Hallo Zusammen,
 
 im Rahmen der Bewerbung habe ich dieses Projekt erstellt. Dieses enthält End-to-End (E2E) Tests für die OPTIMAL SYSTEMS Website (`https://www.optimal-systems.de/`). Die Tests werden mit Cypress ausgeführt und decken Navigation, Menü-Funktionalität und Formulare ab.
 
-e2e/    # Test-Dateien
-│   │   ├── 01_testNavbars.cy.js      # Navigationstests
-│   │   ├── 02_formularTest.cy.js     # Formular-Tests
-│   │   └── 03_test_master.cy copy.js # Master
+01_testNavbars.cy.js      # Navigationstests
+02_formularTest.cy.js     # Formular-Tests
+03_test_master.cy copy.js # Master
 
 ## 📋 Inhaltsverzeichnis
 
